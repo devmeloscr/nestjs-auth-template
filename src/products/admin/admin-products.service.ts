@@ -44,11 +44,15 @@ export class AdminProductsService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    let product = await this.prismaService.product.findFirst({
-      where: {
-        slug: updateProductDto.slug,
-      },
-    });
+    let product = null;
+
+    if (updateProductDto.slug) {
+      product = await this.prismaService.product.findFirst({
+        where: {
+          slug: updateProductDto.slug,
+        },
+      });
+    }
 
     if (product && product.id !== id) {
       throw new ProductSlugAlreadyExistsError(updateProductDto.slug);
